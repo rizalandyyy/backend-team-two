@@ -15,7 +15,6 @@ wheels/
 dist/
 build/
 
-
 # Virtual environments
 venv/
 .venv/
