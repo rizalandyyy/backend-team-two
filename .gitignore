@@ -15,7 +15,6 @@ wheels/
 dist/
 build/
 
-
 # Virtual environments
 venv/
 .venv/
@@ -41,5 +40,3 @@ instance/test.db
 
 # Ignore top-up log file
 logs/topup_requests.csv
-
-
