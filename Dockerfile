@@ -22,5 +22,9 @@ ENV FLASK_ENV=production
 EXPOSE 5000
 
 # Run production server
+<<<<<<< HEAD
 CMD sh -c 'gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 4 --log-level info app:app'
+=======
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT:-5000}", "--workers", "4", "--log-level", "info", "app:app"]
+>>>>>>> fa7b1cc (chore: update Dockerfile and add requirement.txt)
 
