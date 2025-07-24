@@ -12,8 +12,5 @@ dependencies = [
     "pytest>=8.4.1",
     "taskipy>=1.14.1",
 ]
-<<<<<<< HEAD
 [tool.taskipy.tasks]
 fr = "flask --app app run --port 8000 --reload --debug"
-=======
->>>>>>> 16dae93 (chore: initial commit with base project structure)
