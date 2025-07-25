@@ -9,7 +9,7 @@ class ProductDetailRepository:
 
     @staticmethod
     def get_by_id(detail_id):
-        return ProductDetails.query.get(detail_id)
+        return db.session.get(ProductDetails, detail_id)
 
     @staticmethod
     def create(data):
@@ -20,7 +20,7 @@ class ProductDetailRepository:
 
     @staticmethod
     def update(detail_id, data):
-        detail = ProductDetails.query.get(detail_id)
+        detail = db.session.get(ProductDetails, detail_id)
         if not detail:
             return None
         for key, value in data.items():
@@ -30,7 +30,7 @@ class ProductDetailRepository:
 
     @staticmethod
     def delete(detail_id):
-        detail = ProductDetails.query.get(detail_id)
+        detail = db.session.get(ProductDetails, detail_id)
         if not detail:
             return False
         db.session.delete(detail)

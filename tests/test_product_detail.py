@@ -75,7 +75,7 @@ def test_update_product_detail(client, db, sample_product):
     data = response.get_json()
     assert data["message"] == "Updated"
 
-    updated_detail = ProductDetails.query.get(detail.id)
+    updated_detail = db.session.get(ProductDetails, detail.id)
     assert updated_detail.description == "Updated Description"
 
 
@@ -89,7 +89,7 @@ def test_delete_product_detail(client, db, sample_product):
     data = response.get_json()
     assert data["message"] == "Deleted"
 
-    deleted = ProductDetails.query.get(detail.id)
+    deleted = db.session.get(ProductDetails, detail.id)
     assert deleted is None
 
 
