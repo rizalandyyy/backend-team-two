@@ -20,14 +20,6 @@ class Users(db.Model):
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
 
     reviews = db.relationship("Reviews", back_populates="user")
-<<<<<<< HEAD
-
-    def __init__(self, username, email, password_hash):
-        self.username = username
-        self.email = email
-        self.password_hash = password_hash
-=======
->>>>>>> cd61b64 (chore:merge product crud)
 
     def __init__(self, username, email, password_hash):
         self.username = username

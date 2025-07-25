@@ -5,8 +5,9 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from instance.database import init_db
 from route.index import index_router
-from route.product_routes import product_bp
 from route.auth import auth_bp
+from route.product_route import product_bp
+from route.product_detail_route import product_detail_bp
 
 
 def create_app(config_module="config.local"):
@@ -28,7 +29,8 @@ def create_app(config_module="config.local"):
 
     # Register blueprints
     app.register_blueprint(index_router)
-    app.register_blueprint(product_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(product_bp)
+    app.register_blueprint(product_detail_bp)
 
     return app

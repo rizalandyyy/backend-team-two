@@ -1,10 +1,14 @@
 import pytest
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 from config.settings import create_app
 from instance.database import db as _db  # Use the actual app's db instance
 from route.product_detail_route import product_detail_bp
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def app():
     app = Flask(__name__)
     app.config["TESTING"] = True
@@ -26,18 +30,8 @@ def app():
         yield app
 
 
-@pytest.fixture(scope="session")
-def db(app):
-    """Create a new database for the test session."""
-    _db.app = app
-    _db.create_all()
-    yield _db
-    _db.drop_all()
-
-
 @pytest.fixture
-def client(app, db):
-    """Create a test client for the Flask application."""
+def client(app):
     return app.test_client()
 
 
