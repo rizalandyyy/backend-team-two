@@ -25,17 +25,3 @@ def db(app):
 def client(app, db):
     """Create a test client for the Flask application."""
     return app.test_client()
-
-
-@pytest.fixture
-def sample_product(db):
-    """Create and return a sample product ID."""
-    product = Products(
-        name="Test Product",
-        price=99.99,
-        condition="new",
-        image_url="http://example.com/image.jpg",
-    )
-    db.session.add(product)
-    db.session.commit()
-    return product.id  # return only the ID to avoid DetachedInstanceError
