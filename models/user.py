@@ -19,5 +19,7 @@ class Users(db.Model):
     created_at = db.Column(db.DateTime, default=crono.now)
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
 
+    reviews = db.relationship("Reviews", back_populates="user")
+
     def __repr__(self):
         return f"<User {self.username}>"

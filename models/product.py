@@ -14,7 +14,7 @@ class Products(db.Model):
     created_at = db.Column(db.DateTime, default=crono.now)
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
 
-    details = db.relationship("ProductDetails", back_populates="product")
+    details = db.relationship("ProductDetails", back_populates="product", uselist=False)
     reviews = db.relationship("Reviews", back_populates="product")
 
     def __repr__(self):

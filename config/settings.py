@@ -3,6 +3,7 @@ import models  # noqa: F401
 from flask import Flask
 from instance.database import init_db
 from route.index import index_router
+from route.product_detail_route import product_detail_bp
 
 
 def create_app(config_module="config.local"):
@@ -15,5 +16,6 @@ def create_app(config_module="config.local"):
 
     # Register blueprints
     app.register_blueprint(index_router)
+    app.register_blueprint(product_detail_bp)
 
     return app
