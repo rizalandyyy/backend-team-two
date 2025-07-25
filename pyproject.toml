@@ -13,9 +13,7 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pytest>=8.4.1",
     "python-dotenv>=1.1.1",
-    "pytest-mock>=3.14.1",
     "taskipy>=1.14.1",
-    "python-dotenv>=1.0.1",
 ]
 
 [tool.taskipy.tasks]
