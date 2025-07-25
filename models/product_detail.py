@@ -1,6 +1,6 @@
 from instance.database import db
 from shared import crono
-from models.product import Product 
+from models.product import Product
 
 
 class ProductDetails(db.Model):

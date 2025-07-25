@@ -18,8 +18,13 @@ class Users(db.Model):
     role = db.Column(db.Enum(UserRole), default=UserRole.USER, nullable=False)
     created_at = db.Column(db.DateTime, default=crono.now)
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
-    
-    reviews = db.relationship("Reviews", back_populates="product")
+
+    reviews = db.relationship("Reviews", back_populates="user")
+
+    def __init__(self, username, email, password_hash):
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash
 
     def __repr__(self):
         return f"<User {self.username}>"
