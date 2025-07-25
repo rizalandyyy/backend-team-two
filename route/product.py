@@ -14,6 +14,38 @@ def is_admin():
     return user and user.role == UserRole.ADMIN
 
 
+# Endpoint: Update Product (Admin Only)
+@product_bp.route("/products/<int:product_id>", methods=["PUT"])
+@jwt_required()
+def update_product(product_id):
+    user_id = get_jwt_identity()
+    if not is_admin(user_id):
+        return jsonify({"error": "Admin access required"}), 403
+
+    product = Products.query.get(product_id)
+    if not product:
+        return jsonify({"error": "Product not found"}), 404
+
+    data = request.get_json()
+    try:
+        product.name = data.get("name", product.name)
+        product.price = data.get("price", product.price)
+        product.condition = data.get("condition", product.condition)
+        product.image_url = data.get("image_url", product.image_url)
+
+        if product.details:
+            product.details.description = data.get("description", product.details.description)
+            product.details.image1_url = data.get("image1_url", product.details.image1_url)
+            product.details.image2_url = data.get("image2_url", product.details.image2_url)
+            product.details.image3_url = data.get("image3_url", product.details.image3_url)
+
+        db.session.commit()
+        return jsonify({"message": "Product updated successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+
 # Endpoint: Get All Products (Public)
 @product_bp.route("/products", methods=["GET"])
 def get_all_products():
