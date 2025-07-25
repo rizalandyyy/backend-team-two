@@ -1,52 +1,23 @@
-from models.product_detail import ProductDetails
-from repo import product_detail_repo
-from instance.database import db
+from repo.product_detail_repo import ProductDetailRepository
 
 
-def get_details_by_product_id(product_id):
-    detail = product_detail_repo.get_details_by_product_id(product_id)
-    if not detail:
-        raise ValueError("Product detail not found")
-    return detail
+class ProductDetailService:
+    @staticmethod
+    def list_product_details():
+        return ProductDetailRepository.get_all()
 
+    @staticmethod
+    def get_product_detail(detail_id):
+        return ProductDetailRepository.get_by_id(detail_id)
 
-def get_detail_by_id(detail_id):
-    detail = product_detail_repo.get_detail_by_id(detail_id)
-    if not detail:
-        raise ValueError("Product detail not found")
-    return detail
+    @staticmethod
+    def create_product_detail(data):
+        return ProductDetailRepository.create(data)
 
+    @staticmethod
+    def update_product_detail(detail_id, data):
+        return ProductDetailRepository.update(detail_id, data)
 
-def create_product_detail(data):
-    detail = ProductDetails(
-        product_id=data["product_id"],
-        description=data.get("description"),
-        image1_url=data.get("image1_url"),
-        image2_url=data.get("image2_url"),
-        image3_url=data.get("image3_url"),
-    )
-    product_detail_repo.create_product_detail(detail)
-    db.session.commit()
-    return detail
-
-
-def update_product_detail(detail_id, data):
-    detail = product_detail_repo.get_detail_by_id(detail_id)
-    if not detail:
-        raise ValueError("Product detail not found")
-
-    detail.description = data.get("description", detail.description)
-    detail.image1_url = data.get("image1_url", detail.image1_url)
-    detail.image2_url = data.get("image2_url", detail.image2_url)
-    detail.image3_url = data.get("image3_url", detail.image3_url)
-
-    db.session.commit()
-    return detail
-
-
-def delete_product_detail(detail_id):
-    detail = product_detail_repo.get_detail_by_id(detail_id)
-    if not detail:
-        raise ValueError("Product detail not found")
-    product_detail_repo.delete_product_detail(detail)
-    db.session.commit()
+    @staticmethod
+    def delete_product_detail(detail_id):
+        return ProductDetailRepository.delete(detail_id)
