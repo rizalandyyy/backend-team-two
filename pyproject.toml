@@ -12,6 +12,7 @@ dependencies = [
     "flask-sqlalchemy>=3.1.1",
     "psycopg2-binary>=2.9.10",
     "pytest>=8.4.1",
+    "pytest-mock>=3.14.1",
     "taskipy>=1.14.1",
 ]
 
