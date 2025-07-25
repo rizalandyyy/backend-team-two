@@ -15,6 +15,7 @@ dependencies = [
     "python-dotenv>=1.1.1",
     "pytest-mock>=3.14.1",
     "taskipy>=1.14.1",
+    "python-dotenv>=1.0.1",
 ]
 
 [tool.taskipy.tasks]
