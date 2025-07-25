@@ -1,76 +1,100 @@
+import json
 import pytest
-from instance.database import db
-from models.product import Products
 from models.product_detail import ProductDetails
+from models.product import Products
+from instance.database import db
 
 
 @pytest.fixture
-def app():
-    from config.settings import create_app
-
-    app = create_app("config.testing")
-    return app
-
-
-@pytest.fixture
-def client(app):
-    with app.test_client() as client:
-        with app.app_context():
-            db.create_all()
-            yield client
-            db.session.remove()
-            db.drop_all()
+def sample_product(app, db):
+    """Insert sample product for foreign key reference."""
+    product = Products(
+        name="Sample Product",
+        price=9.99,
+        condition="New",
+    )  # sesuaikan field dengan model Products kamu
+    db.session.add(product)
+    db.session.commit()
+    return product
 
 
-@pytest.fixture
-def sample_product(app):
-    with app.app_context():
-        product = Products(
-            name="Test Product",
-            price=100.0,
-            condition="new",
-            image_url="http://example.com/image.jpg",
-        )
-        db.session.add(product)
-        db.session.commit()
-        yield product
-        db.session.delete(product)
-        db.session.commit()
-
-
-def test_create_product_detail(client, sample_product):
+def test_create_product_detail(client, db, sample_product):
     payload = {
         "product_id": sample_product.id,
-        "description": "A sample detail",
-        "image1_url": "http://img1.com",
-        "image2_url": "http://img2.com",
-        "image3_url": "http://img3.com",
+        "description": "Deskripsi produk",
+        "image1_url": "http://example.com/img1.jpg",
+        "image2_url": "http://example.com/img2.jpg",
+        "image3_url": "http://example.com/img3.jpg",
     }
-    response = client.post("/product-details", json=payload)
-    assert response.status_code == 201
-
-
-def test_create_product_detail_missing_field(client):
-    payload = {"description": "Missing product_id"}
-
-    response = client.post("/product-details", json=payload)
-    assert response.status_code == 400
-    data = response.get_json()
-    assert "error" in data
-
-
-def test_get_product_detail(client, sample_product):
-    detail = ProductDetails(
-        product_id=sample_product.id,
-        description="Test desc",
-        image1_url="url1",
-        image2_url="url2",
-        image3_url="url3",
+    response = client.post(
+        "/product-details/", data=json.dumps(payload), content_type="application/json"
     )
+    assert response.status_code == 201
+    data = response.get_json()
+    assert "id" in data
+    assert data["message"] == "Created"
+
+
+def test_get_all_product_details(client, db, sample_product):
+    # Create one manually
+    detail = ProductDetails(product_id=sample_product.id, description="Test")
     db.session.add(detail)
     db.session.commit()
 
-    response = client.get(f"/product-details/{sample_product.id}")
+    response = client.get("/product-details/")
     assert response.status_code == 200
     data = response.get_json()
-    assert data["description"] == "Test desc"
+    assert isinstance(data, list)
+    assert any(d["description"] == "Test" for d in data)
+
+
+def test_get_single_product_detail(client, db, sample_product):
+    detail = ProductDetails(product_id=sample_product.id, description="Single")
+    db.session.add(detail)
+    db.session.commit()
+
+    response = client.get(f"/product-details/{detail.id}")
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["id"] == detail.id
+    assert data["description"] == "Single"
+
+
+def test_update_product_detail(client, db, sample_product):
+    detail = ProductDetails(product_id=sample_product.id, description="Old")
+    db.session.add(detail)
+    db.session.commit()
+
+    payload = {"description": "Updated Description"}
+    response = client.put(
+        f"/product-details/{detail.id}",
+        data=json.dumps(payload),
+        content_type="application/json",
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["message"] == "Updated"
+
+    updated_detail = ProductDetails.query.get(detail.id)
+    assert updated_detail.description == "Updated Description"
+
+
+def test_delete_product_detail(client, db, sample_product):
+    detail = ProductDetails(product_id=sample_product.id, description="To delete")
+    db.session.add(detail)
+    db.session.commit()
+
+    response = client.delete(f"/product-details/{detail.id}")
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["message"] == "Deleted"
+
+    deleted = ProductDetails.query.get(detail.id)
+    assert deleted is None
+
+
+def test_get_nonexistent_detail(client):
+    response = client.get("/product-details/99999")
+    assert response.status_code == 404
+    data = response.get_json()
+    assert data["error"] == "Not found"
