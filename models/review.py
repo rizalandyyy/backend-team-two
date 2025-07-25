@@ -13,8 +13,8 @@ class Reviews(db.Model):
     created_at = db.Column(db.DateTime, default=crono.now)
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
 
-    product = db.relationship("Product", back_populates="reviews")
-    user = db.relationship("User", back_populates="reviews")
+    product = db.relationship("Products", back_populates="reviews")
+    user = db.relationship("Users", back_populates="reviews")
 
     def __repr__(self):
         return (
