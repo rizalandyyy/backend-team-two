@@ -72,4 +72,12 @@ Once the dependencies are installed and the database is set up, you can start th
 uv run task fr
 ```
 
+### 6. Running Tests
+
+To execute the project's tests, use `uv` with `pytest`:
+
+```bash
+uv run pytest
+```
+
 The application should now be running and accessible, connecting to your PostgreSQL database using the environment variables.
