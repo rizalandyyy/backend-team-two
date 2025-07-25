@@ -1,0 +1,26 @@
+services:
+  db-postgres: # 5432 default
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=WeRent_db
+      - POSTGRES_USER=werent_user
+      - POSTGRES_PASSWORD=password123
+    # volumes:
+    #   - ./postgres_db_data:/var/lib/postgresql/data/
+    ports:
+      - "5000:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U werent_user -d WeRent_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_db_data:
+
+# run "docker compose up --build -d" to start the containers
+# run "docker compose down" to stop the containers
+# run "docker compose logs -f" to view the logs
