@@ -14,6 +14,7 @@ def create_app(config_module="config.local"):
     init_db(app)
 
     # Register blueprints
-    app.register_blueprint(index_router)
+    from route import register_routes
+    register_routes(app)
 
     return app
