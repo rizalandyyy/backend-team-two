@@ -18,14 +18,14 @@ def create_app(config_module="config.local"):
     jwt = JWTManager()
     bcrypt.init_app(app)
     jwt.init_app(app)
-    app.extensions['bcrypt'] = bcrypt
-    app.extensions['jwt'] = jwt
+    app.extensions["bcrypt"] = bcrypt
+    app.extensions["jwt"] = jwt
 
     # Initialize database and migration
     init_db(app)
 
     # Register blueprints
     app.register_blueprint(index_router)
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
     return app
