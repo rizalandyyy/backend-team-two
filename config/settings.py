@@ -28,7 +28,9 @@ def create_app(config_module="config.local"):
 
     # Register blueprints
     app.register_blueprint(index_router)
+
     app.register_blueprint(product_bp)
+
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
     return app
