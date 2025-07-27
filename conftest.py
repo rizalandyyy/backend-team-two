@@ -4,11 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from config.settings import create_app
-from instance.database import db as _db
-from models.product import Products
-
-# Your app and db init
-db = SQLAlchemy()
+from instance.database import db as _db  # Use the actual app's db instance
+from route.product_detail_route import product_detail_bp
 
 
 @pytest.fixture
@@ -19,17 +16,29 @@ def app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = "testsecret"
 
-    db.init_app(app)
+    _db.init_app(app)  # Use _db here
     JWTManager(app)
 
-    bcrypt = Bcrypt(app)  # ✅ ADD THIS
+    bcrypt = Bcrypt(app)
     app.extensions["bcrypt"] = bcrypt
 
+    # ✅ REGISTER ROUTES
+    app.register_blueprint(product_detail_bp, url_prefix="/product-details")
+
     with app.app_context():
-        db.create_all()
+        _db.create_all()
         yield app
 
 
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def db(app):
+    """Yields the db and tears down after each test."""
+    with app.app_context():
+        yield _db
+        _db.session.remove()
+        _db.drop_all()
