@@ -43,6 +43,7 @@ config/local.py
 config/remote.py
 config/base.py
 config/remote.py.envrc
+config/local_dev.py
 uv.lock
 postgres_db_data/
 note.md
