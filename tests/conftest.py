@@ -3,9 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
-from config.settings import create_app
-from instance.database import db as _db
-from models.product import Products
+
 
 # Your app and db init
 db = SQLAlchemy()

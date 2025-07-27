@@ -21,5 +21,10 @@ class Users(db.Model):
 
     reviews = db.relationship("Reviews", back_populates="user")
 
+    def __init__(self, username, email, password_hash):
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash
+
     def __repr__(self):
         return f"<User {self.username}>"
