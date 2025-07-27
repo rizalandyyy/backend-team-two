@@ -2,6 +2,7 @@ from instance.database import db
 from shared import crono
 
 
+
 class Products(db.Model):
     __tablename__ = "products"
 
@@ -13,6 +14,9 @@ class Products(db.Model):
     image_url = db.Column(db.String(255), nullable=True)  # URL to product image
     created_at = db.Column(db.DateTime, default=crono.now)
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
+    
+    details = relationship("ProductDetails", back_populates="product")
+    reviews = db.relationship("Reviews", back_populates="product")
 
     def __repr__(self):
         return f"<Product {self.name} - ${self.price}>"

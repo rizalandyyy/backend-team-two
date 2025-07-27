@@ -1,5 +1,6 @@
 from instance.database import db
 from shared import crono
+from models.product import Product 
 
 
 class ProductDetails(db.Model):
@@ -14,7 +15,7 @@ class ProductDetails(db.Model):
     created_at = db.Column(db.DateTime, default=crono.now)
     updated_at = db.Column(db.DateTime, default=crono.now, onupdate=crono.now)
 
-    product = db.relationship("Product", back_populates="details")
+    product = db.relationship("Products", back_populates="details")
 
     def __repr__(self):
         return f"<ProductDetails {self.id} for Product {self.product_id}>"
