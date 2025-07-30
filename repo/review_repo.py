@@ -1,4 +1,5 @@
 from models.review import Reviews
+from instance.database import db
 
 
 class ReviewRepository:
@@ -18,3 +19,22 @@ class ReviewRepository:
     @staticmethod
     def get_all():
         return Reviews.query.all()
+
+    @staticmethod
+    def create(data):
+        review = Reviews(**data)
+        db.session.add(review)
+        db.session.commit()
+        return review
+
+    @staticmethod
+    def update(existing_review, data):
+        for key, value in data.items():
+            setattr(existing_review, key, value)
+        db.session.commit()
+        return existing_review
+
+    @staticmethod
+    def delete(review):
+        db.session.delete(review)
+        db.session.commit()

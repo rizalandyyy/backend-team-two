@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask.views import MethodView
 from services.review_service import ReviewService
 
@@ -8,72 +8,73 @@ review_service = ReviewService()
 
 class ReviewAPI(MethodView):
     def get(self):
-        """GET /api/reviews - Get all reviews"""
+        """GET /reviews - Get all reviews"""
         try:
             reviews = review_service.get_all_reviews()
             return jsonify({"success": True, "data": reviews}), 200
         except Exception:
-            return (
-                jsonify(
-                    {"success": False, "error": "An internal server error occurred."}
-                ),
-                500,
-            )
+            return jsonify({"success": False, "error": "Internal server error"}), 500
+
+    def post(self):
+        """POST /reviews - Create a new review"""
+        try:
+            data = request.get_json()
+            created = review_service.create_review(data)
+            return jsonify({"success": True, "data": created}), 201
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 409
+        except Exception:
+            return jsonify({"success": False, "error": "Internal server error"}), 500
 
 
 class ReviewByUserAPI(MethodView):
     def get(self, user_id):
-        """GET /api/reviews/user/<user_id> - Get reviews by user"""
         try:
             reviews = review_service.get_reviews_by_user(user_id)
             return jsonify({"success": True, "data": reviews}), 200
         except ValueError as e:
             return jsonify({"success": False, "error": str(e)}), 404
-        except Exception:
-            return (
-                jsonify(
-                    {"success": False, "error": "An internal server error occurred."}
-                ),
-                500,
-            )
 
 
 class ReviewByProductAPI(MethodView):
     def get(self, product_id):
-        """GET /api/reviews/product/<product_id> - Get reviews by product"""
         try:
             reviews = review_service.get_reviews_by_product(product_id)
             return jsonify({"success": True, "data": reviews}), 200
         except ValueError as e:
             return jsonify({"success": False, "error": str(e)}), 404
-        except Exception:
-            return (
-                jsonify(
-                    {"success": False, "error": "An internal server error occurred."}
-                ),
-                500,
-            )
 
 
 class ReviewByUserAndProductAPI(MethodView):
     def get(self, user_id, product_id):
-        """GET /api/reviews/<user_id>/<product_id> - Get review by user and product"""
         try:
             review = review_service.get_review(user_id, product_id)
             return jsonify({"success": True, "data": review}), 200
         except ValueError as e:
             return jsonify({"success": False, "error": str(e)}), 404
+
+    def put(self, user_id, product_id):
+        try:
+            data = request.get_json()
+            updated = review_service.update_review(user_id, product_id, data)
+            return jsonify({"success": True, "data": updated}), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
         except Exception:
-            return (
-                jsonify(
-                    {"success": False, "error": "An internal server error occurred."}
-                ),
-                500,
-            )
+            return jsonify({"success": False, "error": "Internal server error"}), 500
+
+    def delete(self, user_id, product_id):
+        try:
+            review_service.delete_review(user_id, product_id)
+            return jsonify({"success": True, "message": "Review deleted"}), 200
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 404
+        except Exception:
+            return jsonify({"success": False, "error": "Internal server error"}), 500
 
 
 # Register routes
-review_router.add_url_rule("/", view_func=ReviewAPI.as_view("review_all"))
+review_router.add_url_rule("/", view_func=ReviewAPI.as_view("review_api"))
 review_router.add_url_rule(
     "/user/<int:user_id>", view_func=ReviewByUserAPI.as_view("review_by_user")
 )
@@ -83,5 +84,5 @@ review_router.add_url_rule(
 )
 review_router.add_url_rule(
     "/<int:user_id>/<int:product_id>",
-    view_func=ReviewByUserAndProductAPI.as_view("review_by_user_and_product"),
+    view_func=ReviewByUserAndProductAPI.as_view("review_user_product"),
 )
