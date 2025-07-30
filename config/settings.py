@@ -9,6 +9,7 @@ from route.product_route import product_bp
 from route.product_detail_route import product_detail_bp
 from route.auth import auth_bp
 
+from route.product import product_bp
 
 def create_app(config_module="config.local"):
     """Create a Flask application instance."""
@@ -32,5 +33,6 @@ def create_app(config_module="config.local"):
     app.register_blueprint(product_bp)
     app.register_blueprint(product_detail_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(product_bp)
 
     return app
