@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from flask.views import MethodView
 from services.review_service import ReviewService
 
-review_router = Blueprint("review_router", __name__, url_prefix="/api/reviews")
+review_router = Blueprint("review_router", __name__, url_prefix="/reviews")
 review_service = ReviewService()
 
 
