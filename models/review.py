@@ -18,7 +18,7 @@ class Reviews(db.Model):
 
     def __repr__(self):
         return (
-            f"<Review {self.id} for Product {self.product_id} by User {self.user_id}>"
+            f"<Review {self.id} for Products {self.product_id} by User {self.user_id}>"
         )
 
     def to_dict(self):
