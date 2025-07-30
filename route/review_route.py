@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask.views import MethodView
 from services.review_service import ReviewService
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 review_router = Blueprint("review_router", __name__, url_prefix="/reviews")
 review_service = ReviewService()
@@ -15,10 +16,16 @@ class ReviewAPI(MethodView):
         except Exception:
             return jsonify({"success": False, "error": "Internal server error"}), 500
 
+    @jwt_required()
     def post(self):
         """POST /reviews - Create a new review"""
         try:
-            data = request.get_json()
+            current_user_id = int(get_jwt_identity())
+            data = request.get_json() or {}
+
+            # Enforce user_id from JWT, ignore client-provided user_id
+            data["user_id"] = current_user_id
+
             created = review_service.create_review(data)
             return jsonify({"success": True, "data": created}), 201
         except ValueError as e:
@@ -53,9 +60,19 @@ class ReviewByUserAndProductAPI(MethodView):
         except ValueError as e:
             return jsonify({"success": False, "error": str(e)}), 404
 
+    @jwt_required()
     def put(self, user_id, product_id):
+        """PUT /reviews/<user_id>/<product_id> - Update review"""
         try:
-            data = request.get_json()
+            current_user_id = int(get_jwt_identity())
+            if user_id != current_user_id:
+                return jsonify({"success": False, "error": "Unauthorized"}), 403
+
+            data = request.get_json() or {}
+
+            # Enforce user_id in update data as well
+            data["user_id"] = current_user_id
+
             updated = review_service.update_review(user_id, product_id, data)
             return jsonify({"success": True, "data": updated}), 200
         except ValueError as e:
@@ -63,8 +80,14 @@ class ReviewByUserAndProductAPI(MethodView):
         except Exception:
             return jsonify({"success": False, "error": "Internal server error"}), 500
 
+    @jwt_required()
     def delete(self, user_id, product_id):
+        """DELETE /reviews/<user_id>/<product_id> - Delete review"""
         try:
+            current_user_id = int(get_jwt_identity())
+            if user_id != current_user_id:
+                return jsonify({"success": False, "error": "Unauthorized"}), 403
+
             review_service.delete_review(user_id, product_id)
             return jsonify({"success": True, "message": "Review deleted"}), 200
         except ValueError as e:
