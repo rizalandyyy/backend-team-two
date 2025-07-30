@@ -18,5 +18,16 @@ class Reviews(db.Model):
 
     def __repr__(self):
         return (
-            f"<Review {self.id} for Product {self.product_id} by User {self.user_id}>"
+            f"<Review {self.id} for Products {self.product_id} by User {self.user_id}>"
         )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "product_id": self.product_id,
+            "user_id": self.user_id,
+            "rating": self.rating,
+            "comment": self.comment,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
