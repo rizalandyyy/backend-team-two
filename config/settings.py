@@ -8,6 +8,7 @@ from route.index import index_router
 from route.auth import auth_bp
 from route.product_route import product_bp
 from route.product_detail_route import product_detail_bp
+from route.review_route import review_router
 
 
 def create_app(config_module="config.local"):
@@ -32,5 +33,6 @@ def create_app(config_module="config.local"):
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(product_bp)
     app.register_blueprint(product_detail_bp)
+    app.register_blueprint(review_router)
 
     return app

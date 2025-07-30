@@ -1,28 +1,28 @@
 from repo.review_repo import ReviewRepository
-from datetime import datetime
+
 
 class ReviewService:
     def __init__(self):
-        self.review_repo = ReviewRepository()
+        self.repo = ReviewRepository()
 
-    def get_review_by_user(self, user_id):
-        reviews = self.review_repo.find_review_by_user(user_id)
+    def get_reviews_by_user(self, user_id):
+        reviews = self.repo.find_by_user(user_id)
         if not reviews:
-            raise ValueError('Review tidak ditemukan.')
+            raise ValueError("No reviews found for this user.")
         return [review.to_dict() for review in reviews]
-    
-    def get_review_by_product(self, product_id):
-        reviews = self.review_repo.find_review_by_product(product_id)
+
+    def get_reviews_by_product(self, product_id):
+        reviews = self.repo.find_by_product(product_id)
         if not reviews:
-            raise ValueError('Review tidak ditemukan.')
+            raise ValueError("No reviews found for this product.")
         return [review.to_dict() for review in reviews]
-    
+
     def get_review(self, user_id, product_id):
-        review = self.review_repo.find_review_by_user_and_product(user_id, product_id)
+        review = self.repo.find_by_user_and_product(user_id, product_id)
         if not review:
-            raise ValueError('Review tidak ditemukan.')
+            raise ValueError("Review not found.")
         return review.to_dict()
 
     def get_all_reviews(self):
-        reviews = self.review_repo.get_all_reviews()
+        reviews = self.repo.get_all()
         return [review.to_dict() for review in reviews]
