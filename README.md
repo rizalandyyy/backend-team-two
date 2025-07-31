@@ -4,10 +4,10 @@ This is the backend repository for the We Rent! application.
 
 ## Project Links
 
-- **Backend Repository:** [Backend GitHub Repository](https://github.com/your-org/we-rent-backend)
-- **Supabase:** [Supabase Project Link](https://app.supabase.io/project/your-project-id)
-- **Koyeb:** [Koyeb Deployment Link](https://app.koyeb.com/app/your-app-id)
-- **Frontend Repository:** [Frontend GitHub Repository](https://github.com/your-org/we-rent-frontend)
+- **Backend Repository:** [Backend GitHub Repository](https://github.com/rizalandyyy/backend-team-two)
+- **Backend Deployment (Koyeb):** [Koyeb Deployment Link](https://indirect-yasmin-ananana-483e9951.koyeb.app/)
+- **Postman API Documentation:** [Postman API Documentation](https://www.postman.com/feri-8677167/werent/collection/fxwpbql/werent-documentation?action=share&source=copy-link&creator=44239234)
+- **Frontend Repository:** [Frontend GitHub Repository](https://github.com/rizalandyyy/frontend-team-two)
 - **Frontend Deployment (Netlify):** [Netlify Deployment Link](https://your-frontend-site.netlify.app)
 
 ## Project Overview
