@@ -6,7 +6,7 @@ This is the backend repository for the We Rent! application.
 
 - **Backend Repository:** [Backend GitHub Repository](https://github.com/rizalandyyy/backend-team-two)
 - **Backend Deployment (Koyeb):** [Koyeb Deployment Link](https://indirect-yasmin-ananana-483e9951.koyeb.app/)
-- **Postman API Documentation:** [Postman API Documentation](https://www.postman.com/feri-8677167/werent/collection/fxwpbql/werent-documentation?action=share&source=copy-link&creator=44239234)
+- **Postman API Documentation:** [Postman API Documentation](https://documenter.getpostman.com/view/44239234/2sB3B8st5c#1dff3df8-6ee7-4ed8-a064-0ea0660e3472)
 - **Frontend Repository:** [Frontend GitHub Repository](https://github.com/rizalandyyy/frontend-team-two)
 - **Frontend Deployment (Netlify):** [Netlify Deployment Link](https://your-frontend-site.netlify.app)
 
@@ -66,7 +66,7 @@ cd we-rent-backend
 Ensure you have `uv` installed (`pip install uv`). Then synchronize dependencies:
 
 ```bash
-uv sync
+uv init
 ```
 
 ### 3. Environment Variables Setup
@@ -126,12 +126,14 @@ Once the dependencies are installed and the database is set up, you can start th
 uv run task fr
 ```
 
+Note : make sure taskipy is installed in your environment, and you have 'tool.taskipy.tasks' in your `pyproject.toml` file.
+
 ### 6. Running Tests
 
 To execute the project's tests, use `uv` with `pytest`:
 
 ```bash
-uv run pytest
+uv run pytest -s -v
 ```
 
 The application should now be running and accessible, connecting to your PostgreSQL database using the environment variables.
