@@ -7,8 +7,8 @@ This is the backend repository for the We Rent! application.
 - **Backend Repository:** [Backend GitHub Repository](https://github.com/rizalandyyy/backend-team-two)
 - **Backend Deployment (Koyeb):** [Koyeb Deployment Link](https://indirect-yasmin-ananana-483e9951.koyeb.app/)
 - **Postman API Documentation:** [Postman API Documentation](https://documenter.getpostman.com/view/44239234/2sB3B8st5c#1dff3df8-6ee7-4ed8-a064-0ea0660e3472)
-- **Frontend Repository:** [Frontend GitHub Repository](https://github.com/rizalandyyy/frontend-team-two)
-- **Frontend Deployment (Netlify):** [Netlify Deployment Link](https://your-frontend-site.netlify.app)
+- **Frontend Repository:** [Frontend GitHub Repository](https://github.com/ahmadhilmi420/werent-app)
+- **Frontend Deployment (Vercel):** [Vercel Deployment Link](https://werent-app.vercel.app/products)
 
 ## Project Overview
 
