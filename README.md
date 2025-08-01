@@ -14,6 +14,58 @@ This is the backend repository for the We Rent! application.
 
 The We Rent! backend is a RESTful API service built with Flask, designed to support the core functionalities of the We Rent! application. It manages user authentication, product listings, product details, reviews, and other business logic required for the rental platform.
 
+## Database Schema
+
+```plaintext
+// User, Product, Product Detail and Review models
+
+Table users {
+  id integer [pk]
+  username varchar [unique, not null]
+  email varchar [unique, not null]
+  password_hash varchar [not null]
+  role enum [default: 'user', not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Enum user_role {
+  admin
+  user
+}
+
+Table products {
+  id integer [pk]
+  name varchar [not null]
+  price float [not null]
+  condition varchar [not null] // e.g., new, used
+  image_url varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table product_details {
+  id integer [pk]
+  product_id integer [not null, ref: > products.id]
+  description text
+  image1_url text
+  image2_url text
+  image3_url text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table reviews {
+  id integer [pk]
+  product_id integer [ref: > products.id, not null]
+  user_id integer [ref: > users.id, not null]
+  rating integer [not null]
+  comment text
+  created_at timestamp
+  updated_at timestamp
+}
+```
+
 ## Codebase Structure
 
 The repository is organized into the following key directories and files:
@@ -35,7 +87,7 @@ The development process follows best practices for Python Flask applications, in
 
 - Use of virtual environments and dependency management via `uv` tool.
 - Environment variable management through `.env` files to securely handle sensitive data.
-- Containerized PostgreSQL database using Docker for consistent development environments.
+- Database hosted on Supabase for managed PostgreSQL service.
 - Database schema migrations managed with Flask-Migrate to handle incremental changes.
 - Modular code organization separating concerns into models, repositories, routes, and services.
 - Automated testing with `pytest` to maintain code reliability and facilitate continuous integration.
@@ -43,8 +95,7 @@ The development process follows best practices for Python Flask applications, in
 ## Implementation Decisions
 
 - **Flask Framework**: Chosen for its simplicity, flexibility, and strong ecosystem for building RESTful APIs.
-- **PostgreSQL Database**: Selected for its robustness, scalability, and support for advanced SQL features.
-- **Docker for Database**: Ensures consistent and isolated database environments across development machines.
+- **Supabase Database**: Selected for its managed PostgreSQL service with additional features like authentication and real-time capabilities.
 - **Flask-Migrate**: Provides seamless database schema migrations aligned with SQLAlchemy models.
 - **Environment Variables**: Used to keep sensitive information out of source control and enable easy configuration.
 - **Layered Architecture**: Separates concerns into distinct layers (models, repositories, services, routes) to improve maintainability and testability.
@@ -81,16 +132,13 @@ This project uses `.env` files to manage sensitive configuration data, such as d
     ```
 
 2.  **Edit `.env`**:
-    Open the newly created `.env` file and replace the placeholder values with your actual database credentials and any other required secrets.
+    Open the newly created `.env` file and replace the placeholder values with your actual Supabase database credentials and any other required secrets.
 
     Example (`.env` content):
 
     ```
-    DB_USER=your_db_user
-    DB_PASSWORD=your_db_password
-    DB_HOST=localhost # or your database host if external
-    DB_PORT=5432
-    DB_NAME=WeRent_db
+    SUPABASE_URL=your_supabase_project_url
+    SUPABASE_KEY=your_supabase_anon_or_service_role_key
 
     JWT_SECRET_KEY=your_strong_jwt_secret_key
     JWT_ACCESS_TOKEN_EXPIRES=3600
@@ -100,23 +148,22 @@ This project uses `.env` files to manage sensitive configuration data, such as d
 
 ### 4. Database Setup
 
-The project uses PostgreSQL with Docker for the database.
+The project uses Supabase as the managed PostgreSQL database.
 
-1.  **Start the database container**:
-    Ensure your Docker daemon is running, then spin up the PostgreSQL database service:
+1.  **Create a Supabase project**:
+    If you haven't already, create a new project on [Supabase](https://supabase.com/).
 
-    ```bash
-    docker compose up -d db-postgres
-    ```
+2.  **Configure your database**:
+    Use the Supabase dashboard to manage your database schema or run migrations locally using Flask-Migrate.
 
-    This will start the PostgreSQL container. The database service `db-postgres` is configured to read `POSTGRES_USER` and `POSTGRES_PASSWORD` from your `.env` file.
+3.  **Run Database Migrations**:
+    Apply database migrations to create the necessary tables:
 
-2.  **Run Database Migrations**:
-    If this is your first time setting up the database, or if there are new model changes, you need to apply database migrations to create the necessary tables.
     ```bash
     uv run flask db upgrade
     ```
-    This command will apply any pending database schema changes using Flask-Migrate. Ensure your `db-postgres` container is running before executing this.
+
+    Ensure your `.env` file contains the correct `SUPABASE_URL` and `SUPABASE_KEY` for the connection.
 
 ### 5. Start the Application Server
 
@@ -126,9 +173,26 @@ Once the dependencies are installed and the database is set up, you can start th
 uv run task fr
 ```
 
-Note : make sure taskipy is installed in your environment, and you have 'tool.taskipy.tasks' in your `pyproject.toml` file.
+Note: make sure taskipy is installed in your environment, and you have 'tool.taskipy.tasks' in your `pyproject.toml` file.
 
-### 6. Running Tests
+### 6. Deployment on Koyeb
+
+To deploy the backend application on Koyeb, follow these steps:
+
+1. Create an account and log in to [Koyeb](https://www.koyeb.com/).
+
+2. Create a new app and connect your GitHub repository containing the backend code.
+
+3. Configure environment variables in the Koyeb dashboard to match your `.env` file, including `SUPABASE_URL`, `SUPABASE_KEY`, `JWT_SECRET_KEY`, and others as needed.
+
+4. Set the build and start commands:
+
+   - Build command: `uv sync` (or your project's dependency installation command)
+   - Start command: `uv run task fr`
+
+5. Deploy the app and monitor the logs for successful startup.
+
+### 7. Running Tests
 
 To execute the project's tests, use `uv` with `pytest`:
 
@@ -136,7 +200,7 @@ To execute the project's tests, use `uv` with `pytest`:
 uv run pytest -s -v
 ```
 
-The application should now be running and accessible, connecting to your PostgreSQL database using the environment variables.
+The application should now be running and accessible, connecting to your Supabase database using the environment variables.
 
 ## Contributing
 
